@@ -110,7 +110,7 @@ public class Topic_02_Locator_In_Selenium {
 		String email = "automation_13@gmail.com";
 		Assert.assertTrue(stringInfo.contains(email));
 		
-		driver.findElement(By.xpath("//div[@class='account-cart-wrapper']//a[@href='http://live.demoguru99.com/index.php/customer/account/']")).click();
+		driver.findElement(By.xpath("//div[@class='account-cart-wrapper']//span[text()='Account']")).click();
 		
 		driver.findElement(By.xpath("//div[@id='header-account']//a[@title='Log Out']")).click();
 	}
@@ -140,12 +140,12 @@ public class Topic_02_Locator_In_Selenium {
 		String successMsg = driver.findElement(By.xpath("//li[@class='success-msg']//span")).getText();
 		Assert.assertEquals(successMsg, "Thank you for registering with Main Website Store.");
 
-		driver.findElement(By.xpath("//div[@class='account-cart-wrapper']//a[@href='http://live.demoguru99.com/index.php/customer/account/']")).click();
+		driver.findElement(By.xpath("//div[@class='account-cart-wrapper']//span[text()='Account']")).click();
 		
 		driver.findElement(By.xpath("//div[@id='header-account']//a[@title='Log Out']")).click();
 		
 		WebDriverWait wait = new WebDriverWait(driver, 15);
-		WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='page-title']//h2[contains(text(),'This is demo site')]")));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='page-title']//h2[contains(text(),'This is demo site')]")));
 		
 		String homePageUrl = driver.getCurrentUrl();
 		Assert.assertEquals(homePageUrl, "http://live.demoguru99.com/index.php/");
