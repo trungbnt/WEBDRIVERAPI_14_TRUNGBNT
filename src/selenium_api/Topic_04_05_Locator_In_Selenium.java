@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -14,8 +13,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class Topic_02_Locator_In_Selenium {
+public class Topic_04_05_Locator_In_Selenium {
 	WebDriver driver;
+	String firstName = "Automation";
+	String lastName = "Testing";
+	String validEmail = "automation_13@gmail.com";
+	String validPass = "123123";
 	 
 	@BeforeClass
 	public void beforeClass() {
@@ -100,15 +103,11 @@ public class Topic_02_Locator_In_Selenium {
 		String stringTitle = driver.findElement(By.xpath("//h1[text()='My Dashboard']")).getText();
 		Assert.assertEquals(stringTitle, "MY DASHBOARD");
 		
-		String stringHello = driver.findElement(By.xpath("//strong[text()='Hello, Automation Testing!']")).getText();
-		Assert.assertEquals(stringHello, "Hello, Automation Testing!");
+		Assert.assertTrue(driver.findElement(By.xpath("//strong[text()='Hello, "+firstName+" "+lastName+"!']")).isDisplayed());
 		
-		String name = "Automation Testing";
-		String stringInfo = driver.findElement(By.xpath("//div[@class='box-head']//following::p[1]")).getText();
-		Assert.assertTrue(stringInfo.contains(name));
+		Assert.assertTrue(driver.findElement(By.xpath("//div[@class='box-content']/p[contains(text(),'"+firstName+" "+lastName+"')]")).isDisplayed());
 		
-		String email = "automation_13@gmail.com";
-		Assert.assertTrue(stringInfo.contains(email));
+		Assert.assertTrue(driver.findElement(By.xpath("//div[@class='box-content']/p[contains(.,'"+validEmail+"')]")).isDisplayed());
 		
 		driver.findElement(By.xpath("//div[@class='account-cart-wrapper']//span[text()='Account']")).click();
 		
