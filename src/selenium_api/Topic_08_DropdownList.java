@@ -9,7 +9,9 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -17,6 +19,8 @@ import org.testng.annotations.Test;
 
 public class Topic_08_DropdownList {
 	WebDriver driver;
+	WebDriverWait waitExplicit;
+	JavascriptExecutor js = (JavascriptExecutor) driver;
 	String fName = "Selenium";
 	String lName = "Online";
 	String email = "Selenium" + randomNumber() + "@gmail.com";
@@ -26,7 +30,8 @@ public class Topic_08_DropdownList {
 	@BeforeClass
 	public void beforeClass() {
 		driver = new FirefoxDriver();
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		waitExplicit = new WebDriverWait(driver, 5);
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		driver.manage().window().maximize();
 	}
 	 
@@ -59,7 +64,7 @@ public class Topic_08_DropdownList {
 	}
 	 
 	@Test
-	public void TC_02_HTML_DropdownList2() {
+	public void TC_02_HTML_DropdownList() {
 		driver.get("https://demo.nopcommerce.com");
 		driver.findElement(By.className("ico-register")).click();
 		Assert.assertEquals("Register", driver.findElement(By.className("page-title")).getText());
@@ -94,18 +99,35 @@ public class Topic_08_DropdownList {
 	
 	@Test
 	public void TC_03_Custom_DropdownList() throws Exception {
-		driver.get("https://jqueryui.com/resources/demos/selectmenu/default.html");
-		driver.findElement(By.id("number-button")).click();
+		//jQuery
+		Custom_Dropdown_One_Item("https://jqueryui.com/resources/demos/selectmenu/default.html", "//span[@id='number-button']", "//ul[@id='number-menu']/li", "19");
+		
+		//Angular
+		Custom_Dropdown_One_Item("https://ej2.syncfusion.com/angular/demos/?_ga=2.262049992.437420821.1575083417-524628264.1575083417#/material/drop-down-list/data-binding", "//ejs-dropdownlist[@id='games']", "//ul[@id='games_options']/li", "Football");
+	
+		//React
+		Custom_Dropdown_One_Item("https://react.semantic-ui.com/maximize/dropdown-example-selection/", "//div[@role='listbox']", "//div[@role='option']/span", "Christian");	
+	
+		//Vuejs
+		Custom_Dropdown_One_Item("https://mikerodham.github.io/vue-dropdowns/", "//li[@class='dropdown-toggle']", "//ul[@class='dropdown-menu']/li/a", "First Option");
+	
+		//React Dropdown Search
+		Custom_Dropdown_One_Item("https://react.semantic-ui.com/maximize/dropdown-example-search-selection/", "//div[@role='alert']", "//div[@class='item']/span", "Bahrain");
+	}
+	
+	public void Custom_Dropdown_One_Item(String url, String parentXpath, String allItemXpath, String expectedValueItem) throws Exception {
+		driver.get(url);
+		driver.findElement(By.xpath(parentXpath)).click();
 		Thread.sleep(1000);
-		List<WebElement> allitems = driver.findElements(By.xpath("//ul[@id='number-menu']/li"));
+		waitExplicit.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(allItemXpath)));
+		List<WebElement> allitems = driver.findElements(By.xpath(allItemXpath));
 		//System.out.println("So luong phan tu la: " +allitems.size());
 		for (WebElement childElement : allitems) {
 			//System.out.println(childElement.getText());
-			if (childElement.getText().contains("19")) {
+			if (childElement.getText().matches(expectedValueItem)) {
 				if (childElement.isDisplayed()) {
 					childElement.click();
-				} else {
-					JavascriptExecutor js = (JavascriptExecutor) driver;
+				} else {					
 					js.executeScript("arguments[0].scrollIntoView(true);", childElement);
 					Thread.sleep(1000);
 					js.executeScript("arguments[0].click();", childElement);
@@ -115,103 +137,6 @@ public class Topic_08_DropdownList {
 			}
 		}
 	}
-	
-	@Test
-	public void TC_04_Custom_DropdownList() throws Exception {
-		driver.get("https://ej2.syncfusion.com/angular/demos/?_ga=2.262049992.437420821.1575083417-524628264.1575083417#/material/drop-down-list/data-binding");
-		driver.findElement(By.id("games")).click();
-		Thread.sleep(1000);
-		List<WebElement> allitems = driver.findElements(By.xpath("//ul[@id='games_options']/li"));
-		//System.out.println("So luong phan tu la: " +allitems.size());
-		for (WebElement childElement : allitems) {
-			//System.out.println(childElement.getText());
-			if (childElement.getText().matches("Football")) {
-				if (childElement.isDisplayed()) {
-					childElement.click();
-				} else {
-					JavascriptExecutor js = (JavascriptExecutor) driver;
-					js.executeScript("arguments[0].scrollIntoView(true);", childElement);
-					Thread.sleep(1000);
-					js.executeScript("arguments[0].click();", childElement);
-				}
-				Thread.sleep(1000);
-				break;
-			}
-		}
-	}
-	
-	@Test
-	public void TC_05_Custom_DropdownList() throws Exception {
-		driver.get("https://react.semantic-ui.com/maximize/dropdown-example-selection/");
-		driver.findElement(By.xpath("//div[@role='listbox']")).click();
-		Thread.sleep(1000);
-		List<WebElement> allitems = driver.findElements(By.xpath("//div[@role='option']/span"));
-		//System.out.println("So luong phan tu la: " +allitems.size());
-		for (WebElement childElement : allitems) {
-			//System.out.println(childElement.getText());
-			if (childElement.getText().matches("Christian")) {
-				if (childElement.isDisplayed()) {
-					childElement.click();
-				} else {
-					JavascriptExecutor js = (JavascriptExecutor) driver;
-					js.executeScript("arguments[0].scrollIntoView(true);", childElement);
-					Thread.sleep(1000);
-					js.executeScript("arguments[0].click();", childElement);
-				}
-				Thread.sleep(1000);
-				break;
-			}
-		}
-	}
-	
-	@Test
-	public void TC_06_Custom_DropdownList() throws Exception {
-		driver.get("https://mikerodham.github.io/vue-dropdowns/");
-		driver.findElement(By.xpath("//li[@class='dropdown-toggle']")).click();
-		Thread.sleep(1000);
-		List<WebElement> allitems = driver.findElements(By.xpath("//ul[@class='dropdown-menu']/li/a"));
-		System.out.println("So luong phan tu la: " +allitems.size());
-		for (WebElement childElement : allitems) {
-			System.out.println(childElement.getText());
-			if (childElement.getText().matches("First Option")) {
-				if (childElement.isDisplayed()) {
-					childElement.click();
-				} else {
-					JavascriptExecutor js = (JavascriptExecutor) driver;
-					js.executeScript("arguments[0].scrollIntoView(true);", childElement);
-					Thread.sleep(1000);
-					js.executeScript("arguments[0].click();", childElement);
-				}
-				Thread.sleep(1000);
-				break;
-			}
-		}
-	}
-	
-	@Test
-	public void TC_07_Custom_DropdownList() throws Exception {
-		driver.get("https://react.semantic-ui.com/maximize/dropdown-example-search-selection/");
-		driver.findElement(By.xpath("//div[@role='alert']")).click();
-		Thread.sleep(1000);
-		List<WebElement> allitems = driver.findElements(By.xpath("//div[@class='item']/span"));
-		//System.out.println("So luong phan tu la: " +allitems.size());
-		for (WebElement childElement : allitems) {
-			//System.out.println(childElement.getText());
-			if (childElement.getText().matches("Bahrain")) {
-				if (childElement.isDisplayed()) {
-					childElement.click();
-				} else {
-					JavascriptExecutor js = (JavascriptExecutor) driver;
-					js.executeScript("arguments[0].scrollIntoView(true);", childElement);
-					Thread.sleep(1000);
-					js.executeScript("arguments[0].click();", childElement);
-				}
-				Thread.sleep(1000);
-				break;
-			}
-		}
-	}
-	
 	 
 	@AfterClass
 	public void afterClass() {
