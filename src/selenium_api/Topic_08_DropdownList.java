@@ -115,16 +115,22 @@ public class Topic_08_DropdownList {
 		Custom_Dropdown_One_Item("https://react.semantic-ui.com/maximize/dropdown-example-search-selection/", "//div[@role='alert']", "//div[@class='item']/span", "Bahrain");
 	}
 	
+	@Test
+	public void TC_04_Custom_DropdownList() throws Exception {
+		String[] months = {"January","February","March"};
+		Custom_Dropdown_Multi_Item("https://multiple-select.wenzhixin.net.cn/examples#basic.html", "//div[@class='form-group row'][2]//div[@class='ms-parent multiple-select']/button", "//div[@class='form-group row'][2]//input[@data-name='selectItem']", months, "//*[@class='selected']");
+	}
+	
 	public void Custom_Dropdown_One_Item(String url, String parentXpath, String allItemXpath, String expectedValueItem) throws Exception {
 		driver.get(url);
 		driver.findElement(By.xpath(parentXpath)).click();
 		Thread.sleep(1000);
 		waitExplicit.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(allItemXpath)));
-		List<WebElement> allitems = driver.findElements(By.xpath(allItemXpath));
+		List<WebElement> allItems = driver.findElements(By.xpath(allItemXpath));
 		//System.out.println("So luong phan tu la: " +allitems.size());
-		for (WebElement childElement : allitems) {
+		for (WebElement childElement : allItems) {
 			//System.out.println(childElement.getText());
-			if (childElement.getText().matches(expectedValueItem)) {
+			if (childElement.getText().equals(expectedValueItem)) {
 				if (childElement.isDisplayed()) {
 					childElement.click();
 				} else {					
@@ -135,6 +141,48 @@ public class Topic_08_DropdownList {
 				Thread.sleep(1000);
 				break;
 			}
+		}
+	}
+	
+	public void Custom_Dropdown_Multi_Item(String url, String parentXpath, String allItemXpath, String[] expectedValueItem, String itemsSelectedXpath) throws Exception {
+		driver.get(url);
+		//driver.findElement(By.xpath(parentXpath)).click();
+		js.executeScript("arguments[0].click();",driver.findElement(By.xpath(parentXpath)));
+		Thread.sleep(1000);
+		waitExplicit.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(allItemXpath)));
+		List<WebElement> allItems = driver.findElements(By.xpath(allItemXpath));
+		//System.out.println("So luong phan tu la: " +allitems.size());
+		for (WebElement childElement : allItems) {
+			//System.out.println(childElement.getText());
+			for (String item : expectedValueItem) {
+				if (childElement.getText().equals(item)) {					
+					js.executeScript("arguments[0].scrollIntoView(true);", childElement);
+					Thread.sleep(1000);
+					js.executeScript("arguments[0].click();", childElement);
+					Thread.sleep(1000);
+					List<WebElement> itemSelected = driver.findElements(By.xpath(itemsSelectedXpath));
+					if (expectedValueItem.length == itemSelected.size()) {
+						break;
+					}
+				}
+			}
+			
+		}
+	}
+	
+	public boolean checkItemSelected(String[] itemSelectedText, String itemsSelectedXpath, String allItemSelectedTextXpath) {
+		List<WebElement> itemSelected = driver.findElements(By.xpath(itemsSelectedXpath));
+		int numberItemSelected = itemSelected.size();
+		String allItemSelectedText = driver.findElement(By.xpath(allItemSelectedTextXpath)).getText();
+		if (numberItemSelected > 0 && numberItemSelected <= 3) {
+			for (String item : itemSelectedText) {
+				if (allItemSelectedText.contains(item)) {
+					break;
+				}
+			}
+			return true;
+		} else {
+			return driver.findElement(By.xpath("//button[@class='ms-choice']/span[text()='"+ numberItemSelected +" of 12 selected']")).isDisplayed();
 		}
 	}
 	 
