@@ -117,8 +117,16 @@ public class Topic_08_DropdownList {
 	
 	@Test
 	public void TC_04_Custom_DropdownList() throws Exception {
+		driver.get("https://multiple-select.wenzhixin.net.cn/examples#basic.html");
+		driver.switchTo().frame(0);
+		String parentXpath = "//div[@class='form-group row'][2]//button";
+		String dropdownXpath = "//div[@class='form-group row'][2]//input[@data-name='selectItem']";
 		String[] months = {"January","February","March"};
-		Custom_Dropdown_Multi_Item("https://multiple-select.wenzhixin.net.cn/examples#basic.html", "//div[@class='form-group row'][2]//div[@class='ms-parent multiple-select']/button", "//div[@class='form-group row'][2]//input[@data-name='selectItem']", months, "//*[@class='selected']");
+		
+		Thread.sleep(5000);
+		Custom_Dropdown_Multi_Item(parentXpath, dropdownXpath, months, "//*[@class='selected']");
+		Thread.sleep(5000);
+		driver.switchTo().defaultContent();
 	}
 	
 	public void Custom_Dropdown_One_Item(String url, String parentXpath, String allItemXpath, String expectedValueItem) throws Exception {
@@ -144,10 +152,10 @@ public class Topic_08_DropdownList {
 		}
 	}
 	
-	public void Custom_Dropdown_Multi_Item(String url, String parentXpath, String allItemXpath, String[] expectedValueItem, String itemsSelectedXpath) throws Exception {
-		driver.get(url);
+	public void Custom_Dropdown_Multi_Item(String parentXpath, String allItemXpath, String[] expectedValueItem, String itemsSelectedXpath) throws Exception {
 		//driver.findElement(By.xpath(parentXpath)).click();
-		js.executeScript("arguments[0].click();",driver.findElement(By.xpath(parentXpath)));
+		WebElement parentItem = driver.findElement(By.xpath(parentXpath));
+		js.executeScript("arguments[0].click();", parentItem);
 		Thread.sleep(1000);
 		waitExplicit.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(allItemXpath)));
 		List<WebElement> allItems = driver.findElements(By.xpath(allItemXpath));
