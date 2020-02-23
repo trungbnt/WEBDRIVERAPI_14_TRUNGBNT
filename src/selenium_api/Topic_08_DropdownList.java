@@ -118,14 +118,13 @@ public class Topic_08_DropdownList {
 	@Test
 	public void TC_04_Custom_DropdownList() throws Exception {
 		driver.get("https://multiple-select.wenzhixin.net.cn/examples#basic.html");
-		driver.switchTo().frame(0);
+		driver.switchTo().frame(driver.findElement(By.xpath("//iframe[@src='templates/template.html?v=188&url=basic.html']")));
 		String parentXpath = "//div[@class='form-group row'][2]//button";
-		String dropdownXpath = "//div[@class='form-group row'][2]//input[@data-name='selectItem']";
-		String[] months = {"January","February","March"};
-		
-		Thread.sleep(5000);
+		String dropdownXpath = "//div[@class='form-group row'][2]//input[@data-name='selectItem']/following-sibling::span";
+		String[] months = {"January","February","March", "April"};		
+		Thread.sleep(1000);
 		Custom_Dropdown_Multi_Item(parentXpath, dropdownXpath, months, "//*[@class='selected']");
-		Thread.sleep(5000);
+		Thread.sleep(1000);
 		driver.switchTo().defaultContent();
 	}
 	
@@ -153,21 +152,23 @@ public class Topic_08_DropdownList {
 	}
 	
 	public void Custom_Dropdown_Multi_Item(String parentXpath, String allItemXpath, String[] expectedValueItem, String itemsSelectedXpath) throws Exception {
-		//driver.findElement(By.xpath(parentXpath)).click();
-		WebElement parentItem = driver.findElement(By.xpath(parentXpath));
-		js.executeScript("arguments[0].click();", parentItem);
-		Thread.sleep(1000);
+		driver.findElement(By.xpath(parentXpath)).click();
+		//WebElement parentItem = driver.findElement(By.xpath(parentXpath));
+		//js.executeScript("arguments[0].click();", parentItem);
+		//Thread.sleep(1000);
 		waitExplicit.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(allItemXpath)));
 		List<WebElement> allItems = driver.findElements(By.xpath(allItemXpath));
-		//System.out.println("So luong phan tu la: " +allitems.size());
+		//System.out.println("So luong phan tu la: " +allItems.size());
 		for (WebElement childElement : allItems) {
 			//System.out.println(childElement.getText());
 			for (String item : expectedValueItem) {
+				//System.out.println(item);
 				if (childElement.getText().equals(item)) {					
-					js.executeScript("arguments[0].scrollIntoView(true);", childElement);
-					Thread.sleep(1000);
-					js.executeScript("arguments[0].click();", childElement);
-					Thread.sleep(1000);
+					//js.executeScript("arguments[0].scrollIntoView(true);", childElement);
+					//Thread.sleep(1000);
+					//js.executeScript("arguments[0].click();", childElement);
+					//Thread.sleep(1000);
+					childElement.click();
 					List<WebElement> itemSelected = driver.findElements(By.xpath(itemsSelectedXpath));
 					if (expectedValueItem.length == itemSelected.size()) {
 						break;

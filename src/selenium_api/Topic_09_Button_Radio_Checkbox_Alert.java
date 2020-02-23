@@ -125,7 +125,7 @@ public class Topic_09_Button_Radio_Checkbox_Alert {
 	@Test
 	public void TC_07_Authentication_Alert() {
 		String usernamepass = "admin";
-		driver.get("https://the-internet.herokuapp.com/basic_auth");
+		driver.get("http://the-internet.herokuapp.com");
 		String url = driver.findElement(By.xpath("//a[text()='Basic Auth']")).getAttribute("href");
 		driver.get(byPassAuthenticationAlert(url, usernamepass, usernamepass));
 		Assert.assertTrue(driver.findElement(By.xpath("//p[contains(text(), 'Congratulations! You must have the proper credentials.')]")).isDisplayed());
