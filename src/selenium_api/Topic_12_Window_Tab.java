@@ -1,9 +1,11 @@
 package selenium_api;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.codec.binary.Base64;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -57,11 +59,18 @@ public class Topic_12_Window_Tab {
 		String titleParent = "Kyna.vn - Học online cùng chuyên gia";
 		switchToWindowAndCheckTitle("//img[@alt='facebook']/parent::a", "Kyna.vn - Trang chủ | Facebook", titleParent);
 		switchToWindowAndCheckTitle("//img[@alt='youtube']/parent::a", "Kyna.vn - YouTube", titleParent);
-		switchToWindowAndCheckTitle("//img[@alt='zalo']/parent::a", "Kyna.vn", titleParent);
-		switchToWindowAndCheckTitle("//img[@alt='apple-app-icon']", "KYNA on the App Store", titleParent);
+		switchToWindowAndCheckTitle("//img[@alt='zalo']/parent::a", "Kyna.vn", titleParent);		
 		switchToWindowAndCheckTitle("//img[@alt='android-app-icon']", "KYNA - Học online cùng chuyên gia - Apps on Google Play", titleParent);
 		switchToWindowAndCheckTitle("//img[@alt='kynaforkids.vn']/parent::a", "Kynaforkids.vn trường học trực tuyến cho trẻ", titleParent);
 		switchToWindowAndCheckTitle("//img[@alt='kynabiz.vn']/parent::a", "Giải pháp đào tạo nhân sự online toàn diện - KynaBiz.vn", titleParent);
+		
+		//Check title of Kyna.vn at App Store
+		driver.findElement(By.xpath("//img[@alt='apple-app-icon']")).click();
+		switchToWindowByTitle("//img[@alt='apple-app-icon']");
+		Thread.sleep(1000);
+		String title = "KYNA on the App Store";
+		Assert.assertEquals(decodeString(driver.getTitle().substring(1)), decodeString(title));
+		Thread.sleep(1000);
 		
 		driver.switchTo().frame(driver.findElement(By.xpath("//div[@class='fanpage']//iframe")));
 		driver.findElement(By.xpath("//a[text()='Kyna.vn']")).click();
@@ -130,5 +139,10 @@ public class Topic_12_Window_Tab {
 		Assert.assertEquals(driver.getTitle(), title);
 		Thread.sleep(1000);
 		switchToWindowByTitle(titleParent);
+	}
+	
+	public String decodeString(String title) {
+		byte[] decodedString = Base64.decodeBase64(title);
+		return(new String(decodedString));
 	}
 }
