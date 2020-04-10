@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Suite 1" parallel="false">
+
+  <test name="Run suite 1">
+    <classes>
+      <class name="testng.TestNG_01_Annotations"/>
+    </classes>
+  </test> <!-- Test -->
+</suite> <!-- Suite -->

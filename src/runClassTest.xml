@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Suite" parallel="tests" thread-count="2">
+  <test name="Run on Firefox">
+  <parameter name="browser" value="firefox"></parameter>
+    <classes>
+      <class name="testng.TestNG_06_Parameter_Multibrowser"/>
+    </classes>
+  </test> <!-- Test -->
+  <test name="Run on Chrome">
+  <parameter name="browser" value="chrome"></parameter>
+    <classes>
+      <class name="testng.TestNG_07_Loop"/>
+    </classes>
+  </test> <!-- Test -->
+</suite> <!-- Suite -->
